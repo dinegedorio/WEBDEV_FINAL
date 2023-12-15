@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "AdminDashboardView";
+    Layout = "~/Views/Home/About.cshtml";
+}
+
+<h2>Admin Dashboard</h2>
+
+<div>
+    <h3>User Statistics:</h3>
+    <p>Male Users Percentage: @ViewBag.MalePercentage%</p>
+    <p>Female Users Percentage: @ViewBag.FemalePercentage%</p>
+</div>
+
+<div>
+    <h3>Student Statistics:</h3>
+    <p>Total Students Added: @ViewBag.TotalStudentsCount</p>
+    <p>Percentage of Students: @ViewBag.StudentsPercentage%</p>
+</div>

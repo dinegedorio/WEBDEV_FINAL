@@ -1,0 +1,328 @@
+﻿@model List<Student>
+
+@{
+    ViewBag.Title = "Crud";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+    }
+
+    h3 {
+        color: #333;
+        text-align: center;
+    }
+
+    .containers {
+        display: inline-block;
+        vertical-align: top;
+        border: 1px solid #ddd;
+        width: 45%;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        border-radius: 8px;
+    }
+
+    .list-container {
+        display: inline-block;
+        vertical-align: top;
+        width: 45%;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        border-radius: 8px;
+        margin-left: 5rem;
+        height: 490px;
+    }
+
+    .table-container-wrapper {
+        height: calc(100% - 40px);
+    }
+
+    .table-container {
+        overflow-x: auto;
+        max-height: 360px;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+     
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    a.edit-link, a.delete-link {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 4px;
+    }
+
+    a.edit-link {
+        background-color: #3498db;
+    }
+
+    a.delete-link {
+        background-color: #e74c3c;
+    }
+
+    form {
+        margin-top: 20px;
+        max-width: 400px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+        transform: translate(10%);
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        max-width: 500px;
+        transform: translate(10%);
+    }
+
+    .modal-body {
+        transform: none;
+    }
+
+   .modal-body input {
+            max-width: 90%;
+    }
+
+    .modal-content {
+        width: 80%;
+        transform: translate(100px, 10px);
+    }
+
+    .modal-body button {
+        transform: translate(150px);
+    }
+
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transform: translate(150%);
+    }
+
+        button:hover {
+            background-color: #45a049;
+        }
+</style>
+
+<!-- Add Student Form -->
+<div class="containers">
+    <h3>Add Student</h3>
+    <form action="@Url.Action("AddStudent", "Home")" method="POST">
+        <div>
+            <label for="Name">Name:</label>
+            <input type="text" name="Name" required />
+        </div>
+        <div>
+            <label for="LastName">Last Name:</label>
+            <input type="text" name="LastName" required />
+        </div>
+        <div>
+            <label for="Age">Age:</label>
+            <input type="number" name="Age" required />
+        </div>
+        <div>
+            <label for="Grade">Grade:</label>
+            <input type="text" name="Grade" required />
+        </div>
+        <button type="submit">Add Student</button>
+    </form>
+</div>
+
+<!-- List of Students -->
+<div class="list-container">
+    <h3>List of Students</h3>
+    <div id="studentListContainer" class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model)
+                {
+                    <tr>
+                        <td>@student.Name</td>
+                        <td>@student.LastName</td>
+                        <td>@student.Age</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- Display the list of students -->
+@if (Model != null && Model.Any())
+{
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Grade</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model)
+                {
+                    <tr>
+                        <td>@student.Name</td>
+                        <td>@student.LastName</td>
+                        <td>@student.Age</td>
+                        <td>@student.Grade</td>
+                        <td>
+                            <a href="#" onclick="editStudent('@student.StudentID', '@student.Name', '@student.LastName', '@student.Age', '@student.Grade')" class="edit-link">Edit</a>
+                            <a href="#" onclick="deleteStudent('@student.StudentID')" class="delete-link">Delete</a>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+<!-- Edit Student Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right:3rem;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="EditName">Name:</label>
+                        <input type="text" class="form-control" id="EditName" name="EditName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="EditLastName">Last Name:</label>
+                        <input type="text" class="form-control" id="EditLastName" name="EditLastName" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="EditAge">Age:</label>
+                        <input type="number" class="form-control" id="EditAge" name="EditAge" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="EditGrade">Grade:</label>
+                        <input type="text" class="form-control" id="EditGrade" name="EditGrade" required />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="updateStudent()">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function editStudent(studentId, name, lastName, age, grade) {
+        //values in edit modal
+        $("#EditName").val(name);
+        $("#EditLastName").val(lastName);
+        $("#EditAge").val(age);
+        $("#EditGrade").val(grade);
+
+        //data attribute to store the student ID
+        $("#editForm").data("student-id", studentId);
+
+        // Show edit modal
+        $("#editModal").modal("show");
+    }
+
+    function updateStudent() {
+        //values from edit modal
+        var name = $("#EditName").val();
+        var lastName = $("#EditLastName").val();
+        var age = $("#EditAge").val();
+        var grade = $("#EditGrade").val();
+
+        // student Id from the data attribute
+        var studentId = $("#editForm").data("student-id");
+
+        // Perform an AJAX request to update the student
+        $.ajax({
+            url: "/Home/UpdateStudent",
+            type: "POST",
+            data: { studentId: studentId, name: name, lastName: lastName, age: age, grade: grade },
+            success: function (result) {
+
+                // Close the modal and reload the page
+                $("#editModal").modal("hide");
+                window.location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function deleteStudent(studentId) {
+        if (confirm("Are you sure you want to delete this student?")) {
+            // AJAX request to delete the student
+            $.ajax({
+                url: "/Home/DeleteStudent",
+                type: "POST",
+                data: { id: studentId },
+                success: function (result) {
+                    // page reload after successful deletion
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    }
+</script>

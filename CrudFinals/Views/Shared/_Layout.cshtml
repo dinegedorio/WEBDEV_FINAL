@@ -1,0 +1,148 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Sync</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/Style.css" />
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Student Sync", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+
+                    @*direct for CRUD*@
+                    @if (Session["Username"] != null)
+                    {
+                        <li>@Html.ActionLink("View Student", "Crud", "Home")</li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (Session["Username"] != null)
+                    {
+                        <li><p class="navbar-text">Welcome, @Session["Username"]!</p></li>
+                        <li><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - StudentSync</p>
+        </footer>
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <!-- Login and Registration Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="loginModalLabel">Login/Registration</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger" style="width:450px;">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+                    <!-- Login form content -->
+                    <form id="loginForm" action="@Url.Action("Login", "Home")" method="POST">
+                        <div class="form-group">
+                            <label for="loginUsername">Username:</label>
+                            <input type="text" name="Username" class="form-control" id="loginUsername" placeholder="Enter your username">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password:</label>
+                            <input type="password" name="Password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                        </div>
+                        <button type="button" class="btn btn-link" id="showRegistration">Registration</button>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+
+                    <!-- Registration form content-->
+                    <form action="@Url.Action("AddUserToDatabase", "Home")" method="POST" id="registrationForm" style="display: none;">
+                        <div class="form-group">
+                            <label for="registrationUsername">Username:</label>
+                            <input type="text" name="Username" class="form-control" id="registrationUsername" placeholder="Choose a username">
+                        </div>
+                        <div class="form-group">
+                            <label for="registrationEmail">Email:</label>
+                            <input type="email" name="Email" class="form-control" id="registrationEmail" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="registrationPassword">Password:</label>
+                            <input type="password" name="Password" class="form-control" id="registrationPassword" placeholder="Choose a password">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender:</label>
+                            <select class="form-control" id="gender" name="gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-link" id="showLogin">Login</button>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="Close" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#showRegistration").click(function () {
+                $("#loginForm").hide();
+                $("#registrationForm").show();
+            });
+
+            $("#showLogin").click(function () {
+                $("#registrationForm").hide();
+                $("#loginForm").show();
+            });
+        });
+
+    </script>
+
+
+</body>
+</html>

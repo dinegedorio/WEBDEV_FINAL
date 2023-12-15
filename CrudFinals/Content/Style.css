@@ -1,0 +1,116 @@
+﻿body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #f4f4f4;
+}
+
+.navbar {
+    background-color: white;
+    border: none;
+    height: 60px;
+
+}
+
+.navbar.navbar-inverse {
+    background-color: white;
+    border: none;
+    height: 60px;
+}
+
+.navbar.navbar-inverse .navbar-brand {
+    font-size: 28px;
+    color: black;
+    font-weight: bold;
+}
+         
+
+.navbar.navbar-inverse .navbar-nav li a {
+    font-size: 18px;
+    color: black;
+    font-weight: 500;
+}
+
+.navbar.navbar-inverse .navbar-nav li a:hover {
+    color: blue;
+}
+
+.jumbotron {
+    color: white;
+    background-image: url(https://www.mhcautomation.com/wp-content/uploads/2021/03/Learn-about-benefits-of-document-management-system-banner-1024x332.png);
+    height: 300px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+}
+
+.jumbotron h3 {
+   text-align: right;
+   font-weight: bold;
+   color: orange;
+}
+
+.jumbotron p {
+   text-align: right;
+   text-decoration: none;
+   font-weight: 500;
+}
+
+.row {
+    margin-top: 10px;
+}
+
+.col-md-6 {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+}
+
+/*login, registration*/
+.modal-body{
+    justify-content: center;
+    transform: translate(10%, 5%);
+}
+.modal-body .form-group {
+    margin-bottom: 10px;
+}
+
+.modal-body label {
+    font-size: 16px; 
+}
+
+.modal-body input {
+    height: 40px; 
+    max-width: 80%;
+    font-size: 16px; 
+}
+.modal-body button{
+    transform:translate(300px);
+    margin-bottom: 10px;
+}
+#Close:hover {
+    background-color: red;
+    color: white;
+}
+footer {
+    text-align: center;
+}
+
+@media (max-width: 767px) {
+    .navbar-collapse {
+        margin: 0;
+        background-color: #333;
+    }
+
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+
+        .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
+        .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
+            color: #333;
+        }
+}

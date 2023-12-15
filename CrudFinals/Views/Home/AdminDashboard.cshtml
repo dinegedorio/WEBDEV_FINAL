@@ -1,0 +1,166 @@
+﻿@{
+    ViewBag.Title = "AdminDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dashboard-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .dashboard-item {
+        box-shadow: 2px 4px 5px 0px rgba(82, 78, 78, 0.75);
+        border-radius: 10px;
+        width: 300px;
+        padding: 2rem;
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+
+    #user {
+        box-shadow: 2px 4px 5px 0px rgba(82, 78, 78, 0.75);
+        text-align: center;
+        font-size: 24px;
+        width: 200px;
+        height: 100px;
+        padding: 22px;
+        margin-top: 8rem;
+    }
+
+    #student {
+        box-shadow: 2px 4px 5px 0px rgba(82, 78, 78, 0.75);
+        text-align: center;
+        font-size: 22px;
+        width: 200px;
+        height: 100px;
+        padding: 22px;
+        margin-top: 8rem;
+    }
+
+    .table-container {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 20px;
+    }
+</style>
+
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">StudentSync Admin</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                {
+                    <li><p class="navbar-text">Welcome, Admin!</p></li>
+                    <li><a href="@Url.Action("Logout", "Home")">Logout</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-container">
+        <div class="dashboard-item" id="user">
+            <p>Total Users: @ViewBag.UserCount</p>
+        </div>
+
+        <div class="dashboard-item" id="student">
+            <p>Total Students: @ViewBag.StudentCount</p>
+        </div>
+
+        <!-- Gender Pie Chart -->
+        <div class="dashboard-item">
+            <h3>User Gender</h3>
+            <canvas id="genderChart" width="300" height="300"></canvas>
+        </div>
+
+        <!-- Age Pie Chart -->
+        <div class="dashboard-item">
+            <h3>Student Age</h3>
+            <canvas id="ageChart" width="300" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- User Table -->
+    <div class="table-container" style="max-height: 300px; overflow-y: auto; margin-top: 20px;">
+        <h3>User Table</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Users != null)
+                {
+                    foreach (var user in ViewBag.Users)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>@user.Gender</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <p>No users available</p>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Gender Pie Chart
+    var genderChartCanvas = document.getElementById("genderChart").getContext("2d");
+    var genderData = {
+        labels: ["Male", "Female", "Other"],
+        datasets: [{
+            data: [@ViewBag.MaleCount, @ViewBag.FemaleCount, @ViewBag.OtherCount],
+            backgroundColor: ["blue", "pink", "violet"]
+        }]
+    };
+    var genderChart = new Chart(genderChartCanvas, {
+        type: 'pie',
+        data: genderData
+    });
+
+    // Age Pie Chart
+    var ageChartCanvas = document.getElementById("ageChart").getContext("2d");
+    var ageData = {
+        labels: ["0-10", "11-20", "21-30", "31-40", "41+"],
+        datasets: [{
+            data: [@ViewBag.AgeRange0_10, @ViewBag.AgeRange11_20, @ViewBag.AgeRange21_30, @ViewBag.AgeRange31_40, @ViewBag.AgeRange41Plus],
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"]
+        }]
+    };
+    var ageChart = new Chart(ageChartCanvas, {
+        type: 'pie',
+        data: ageData
+    });
+</script>
